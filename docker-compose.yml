@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: qdrant_db
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    restart: always
+
+  redis:
+    image: redis:latest
+    container_name: redis_cache
+    ports:
+      - "6379:6379"
+    restart: always
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb_log
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    restart: always
+
+  api:
+    build:
+      context: .
+      dockerfile: ./api/Dockerfile.api
+    container_name: fastapi_app
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api/app:/app
+      - ./models:/app/models
+    depends_on:
+      - qdrant
+      - redis
+      - mongodb
+    restart: always
+
+  rag-ingestion:
+    build:
+      context: ./rag_core
+      dockerfile: Dockerfile.rag
+    container_name: rag_ingestion_runner
+    depends_on:
+      - qdrant
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+    command: ["python", "ingestion.py"]
+
+volumes:
+  qdrant_data:
+  mongodb_data:

@@ -1,0 +1,17 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+COPY torch-2.9.1+cpu-cp311-cp311-manylinux_2_28_x86_64.whl .
+
+RUN pip install --no-cache-dir torch-2.9.1+cpu-cp311-cp311-manylinux_2_28_x86_64.whl
+
+# Use a cache mount to speed up pip install on subsequent builds
+RUN --mount=type=cache,target=/root/.cache/pip pip install -r requirements.txt
+
+RUN python -c "import nltk; nltk.download('averaged_perceptron_tagger_eng', quiet=True)"
+
+COPY . .
+
+CMD ["python", "-u", "ingestion.py"]

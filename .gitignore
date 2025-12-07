@@ -1,0 +1,11 @@
+# Ignore large local wheels and dataset directories
+rag_core/torch-2.0.0+cpu.cxx11.abi-cp311-cp311-linux_x86_64.whl
+rag_core/torch-2.1.2+cpu.cxx11.abi-cp38-cp38-linux_x86_64.whl
+rag_core/torch-2.9.1+cpu-cp311-cp311-manylinux_2_28_x86_64.whl
+
+customer-support-llm-chatbot-training-dataset/
+data/
+
+# Local environment and virtualenv
+.env
+venv/

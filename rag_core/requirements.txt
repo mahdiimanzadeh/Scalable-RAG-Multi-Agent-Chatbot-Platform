@@ -1,0 +1,8 @@
+langchain-qdrant
+langchain-huggingface
+qdrant-client
+sentence-transformers
+unstructured
+pandas
+nltk
+langchain-community
